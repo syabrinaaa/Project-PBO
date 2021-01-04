@@ -45,7 +45,8 @@ def view_list(user, board):
 {index+1}. Add List
 {index+2}. Change Board Name
 {index+3}. Delete
-{index+4}. Back
+{index+4}. Invite
+{index+5}. Back
 """)
 
         pilih = int(input("Input Menu: "))
@@ -55,7 +56,9 @@ def view_list(user, board):
             board.changeNameBoard()
         elif pilih == index+3:
             board.delete()
-        elif pilih == index+4:
+        elif pilih ==  index+4:
+            board.invite()
+        elif pilih == index+5:
             view_board(user)
         elif pilih <= index:
             view_card(user, board, board.getAllList()[str(pilih)])

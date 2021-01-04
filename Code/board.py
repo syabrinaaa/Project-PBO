@@ -61,3 +61,13 @@ class Board(Controller):
             self.setAllList()
         else:
             self.delete()
+
+    def invite(self):
+        invite_email = str(input("Enter your friend's email: "))
+        if self._is_Null(invite_email):
+            get_ID_Account = self._loadID("SELECT ID_Account FROM `account` WHERE email = %s", (invite_email,))
+            MySql.update("INSERT INTO `detail_board`(`ID_Account`, `ID_Board`) VALUES (%s, %s)", (get_ID_Account, self.getID()))
+            print("Invite successful....")
+        else:
+            self.invite()
+            
