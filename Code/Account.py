@@ -60,10 +60,10 @@ Name: {self.getFullName()}
     def addBoard(self):
         nameBoard=str(input("Enter a board name: "))
         if self._is_Null(nameBoard):
-            key = str(len(self.__board))
+            key = str(len(self._board))
             self._board[key] = Board()
             self._board[key].setBoardName(nameBoard)
-            MySql.update("INSERT INTO `board`(`Board_Name`) VALUES (%s)", (self.__board[key].getBoardName(),))
+            MySql.update("INSERT INTO `board`(`Board_Name`) VALUES (%s)", (self._board[key].getBoardName(),))
             my_ID = self._loadID("SELECT `ID_Board` FROM `board` WHERE `Board_Name` = %s", (self._board[key].getBoardName(),))
             self._board[key].setBoardID(my_ID)
             MySql.update("INSERT INTO `detail_board`(`ID_Account`, `ID_Board`) VALUES (%s, %s)", (self.getID(), self._board[key].getID()))
@@ -80,6 +80,7 @@ Name: {self.getFullName()}
     def setPassword(self, param):
         self._password = param
     def setBoard(self):
+        self._board = {}
         loadBoard = MySql.read(f"SELECT board.ID_Board, board.Board_Name FROM board JOIN detail_board ON board.ID_Board = detail_board.ID_Board WHERE detail_board.ID_Account = {self.getID()}", ())
         for index, value in enumerate(loadBoard):
             self._board[str(index)] = Board()
@@ -100,3 +101,17 @@ Name: {self.getFullName()}
 
     def saveChange(self):
         MySql.update("UPDATE `account` SET `full_Name`=%s,`email`=%s,`password`=%s WHERE `ID_Account`=%s", (self.getFullName(), self.getEmail(), self.getPassword(), self.getID()))
+
+    def delete(self):
+        index = 0
+        for index, board in enumerate(self.getBoard()):
+            print(f"{index}. {self.getBoard()[board].getBoardName()}")
+        print(f"{index+1}. Back")
+        pilih = int(input("Enter the board to be removed: "))
+        if pilih == index+1:
+            pass
+        elif pilih != index+1:
+            MySql.update("DELETE FROM `detail_board` WHERE ID_Account = %s AND ID_Board = %s", (self.getID(), self.getBoard()[str(pilih)].getID()))
+            self.setBoard()
+        else:
+            self.delete()

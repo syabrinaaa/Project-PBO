@@ -23,12 +23,14 @@ class The_List(Controller):
             self.addCard()
         
     def setAllCard(self):
+        self.__allCard = {}
         loadCard = MySql.read("SELECT * FROM card WHERE ID_List=%s", (self.getID(),))
         for index, value in enumerate(loadCard):
             self.__allCard[str(index)] = Card()
             self.__allCard[str(index)].setCardID(value[0])
             self.__allCard[str(index)].setCardName(value[1])
-            self.__allCard[str(index)].setDeadline(value[2])
+            if value[2] != None:
+                self.__allCard[str(index)].setDeadline(value[2])
 
     def setListName(self, param):
         self.__listName = param
@@ -49,3 +51,17 @@ class The_List(Controller):
         else:
             print('Please enter an valid list name')
             self.changeNameList()
+
+    def delete(self):
+        index = 0
+        for index, is_card in enumerate(self.getAllCard()):
+            print(f"{index}. {self.getAllCard()[is_card].getCardName()}")
+        print(f"{index+1}. Back")
+        pilih = int(input("Enter the board to be removed: "))
+        if pilih == index+1:
+            pass
+        elif pilih != index+1:
+            MySql.update("DELETE FROM `card` WHERE ID_Card = %s", (self.getAllCard()[str(pilih)].getID(),))
+            self.setAllCard()
+        else:
+            self.delete()

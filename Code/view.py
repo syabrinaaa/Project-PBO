@@ -15,7 +15,8 @@ def view_card(user, board, the_list):
         print(f"""
 {index+1}. Add Card
 {index+2}. Change List Name
-{index+3}. Back
+{index+3}. Delete
+{index+4}. Back
 """)
 
         pilih = int(input("Input Menu: "))
@@ -24,6 +25,8 @@ def view_card(user, board, the_list):
         elif pilih == index+2:
             the_list.changeNameList()
         elif pilih == index+3:
+            the_list.delete()
+        elif pilih == index+4:
             view_list(user, board)
         else:
             print("Enter an valid input")
@@ -41,7 +44,8 @@ def view_list(user, board):
         print(f"""
 {index+1}. Add List
 {index+2}. Change Board Name
-{index+3}. Back
+{index+3}. Delete
+{index+4}. Back
 """)
 
         pilih = int(input("Input Menu: "))
@@ -50,6 +54,8 @@ def view_list(user, board):
         elif pilih == index+2:
             board.changeNameBoard()
         elif pilih == index+3:
+            board.delete()
+        elif pilih == index+4:
             view_board(user)
         elif pilih <= index:
             view_card(user, board, board.getAllList()[str(pilih)])
@@ -67,13 +73,16 @@ def view_board(user):
             print("-----You don't have a board-----")
         print(f"""
 {index+1}. Add Board
-{index+2}. Back
+{index+2}. Delete
+{index+3}. Back
 """)
 
         pilih = int(input("Input Menu: "))
         if pilih == index+1:
             user.addBoard()
         elif pilih == index+2:
+            user.delete()
+        elif pilih == index+3:
             view_beranda(user)
         elif pilih <= index:
             view_list(user, user.getBoard()[str(pilih)])

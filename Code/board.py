@@ -22,24 +22,23 @@ class Board(Controller):
             self.addList()
         
     def setAllList(self):
+        self.__allList = {}
         loadList = MySql.read("SELECT * FROM `list` WHERE ID_Board=%s", (self.getID(),))
         for index, value in enumerate(loadList):
             self.__allList[str(index)] = The_List()
             self.__allList[str(index)].setListID(value[0])
             self.__allList[str(index)].setListName(value[1])
     def setBoardName(self, param):
-        self.boardName = param
+        self.__boardName = param
     def setBoardID(self, param):
         self.__boardID = param
 
     def getBoardName(self):
-        return self.boardName
+        return self.__boardName
     def getID(self):
         return self.__boardID
     def getAllList(self):
         return self.__allList
-
-
 
     def changeNameBoard(self):
         self.setBoardName(str(input("Enter a new name: ")))
@@ -48,3 +47,17 @@ class Board(Controller):
         else:
             print('Please enter an valid board name')
             self.changeNameBoard()
+
+    def delete(self):
+        index = 0
+        for index, is_list in enumerate(self.getAllList()):
+            print(f"{index}. {self.getAllList()[is_list].getListName()}")
+        print(f"{index+1}. Back")
+        pilih = int(input("Enter the board to be removed: "))
+        if pilih == index+1:
+            pass
+        elif pilih != index+1:
+            MySql.update("DELETE FROM `list` WHERE ID_List = %s", (self.getAllList()[str(pilih)].getID(),))
+            self.setAllList()
+        else:
+            self.delete()
